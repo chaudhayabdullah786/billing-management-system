@@ -1,0 +1,281 @@
+✔ Python backend (Flask / Django — you choose)
+✔ Frontend (HTML, CSS, JS, Bootstrap)
+✔ Database (SQLite / MySQL)
+✔ Admin Dashboard
+✔ Billing Module
+✔ Product Inventory
+✔ Customer Module
+✔ Invoice PDF generation
+✔ Authentication
+✔ API routes
+✔ Full project folder structure
+✔ Deployment instructions
+✔ Complete code
+
+✅ THE COMPLETE MASTER-PROMPT FOR FULL-STACK PYTHON GROCERY BILLING SYSTEM
+
+Copy + Paste this entire prompt:
+
+📌 FULL STACK GROCERY STORE BILLING MANAGEMENT SYSTEM — PYTHON (COMPLETE PROJECT)
+
+You are an expert Python full-stack engineer.
+Create a fully functional grocery billing management system as a production-ready project.
+
+🎯 PROJECT REQUIREMENTS
+✔ Backend (Python)
+
+Choose any of:
+
+Flask (preferred)
+or
+
+Django
+
+✔ Frontend
+
+Use:
+
+HTML5
+
+CSS3
+
+Bootstrap 5
+
+JavaScript (Vanilla or jQuery)
+
+✔ Database
+
+Use either:
+
+SQLite (default)
+OR
+
+MySQL (if I choose later)
+
+Provide SQL schema + migrations.
+
+✔ Modules Required
+1️⃣ Admin Login
+
+Username/password
+
+Role-based access (Admin, Cashier)
+
+2️⃣ Product Management
+
+Add product
+
+Edit product
+
+Delete product
+
+View all products
+
+Import product list via CSV
+
+Product fields:
+
+Product ID
+
+Product Name
+
+Category
+
+Price
+
+Quantity in Stock
+
+Barcode Number (auto-generated)
+
+3️⃣ Customer Management
+
+Add customer
+
+Customer history
+
+Search customer
+
+Mobile number lookup
+
+4️⃣ Billing / POS Module
+
+A modern POS billing page with:
+
+Add items to cart (search by barcode or name)
+
+Auto price + subtotal + tax + discount
+
+Generate final bill
+
+Save invoice in database
+
+Print invoice
+
+Download invoice PDF (using Python library like reportlab or pdfkit)
+
+5️⃣ Inventory Management
+
+Auto-deduct stock when invoice generated
+
+Low stock alert
+
+Stock reports
+
+Stock valuation
+
+6️⃣ Invoice Module
+
+Every invoice must have:
+
+Invoice ID
+
+Customer info
+
+List of products
+
+Quantity
+
+Price
+
+Tax
+
+Discount
+
+Total amount
+
+Date & Time
+
+Export PDF
+
+Reprint invoice
+
+Search invoice
+
+7️⃣ Analytics Dashboard
+
+Show charts:
+
+Daily sales
+
+Monthly sales
+
+Revenue graph
+
+Out-of-stock products
+
+Most sold items
+
+Use Chart.js.
+
+✔ API Endpoints (REST)
+
+Create JSON API for:
+
+/api/products
+
+/api/invoice/create
+
+/api/invoice/<id>
+
+/api/customers
+
+/api/dashboard/stats
+
+✔ Additional Features
+
+Dark/Light mode
+
+Logging module
+
+Admin activity logs
+
+CSV export of reports
+
+Responsive Bootstrap UI
+
+✔ Deployment
+
+Give deployment instructions for:
+
+Localhost
+
+Dockerfile + docker-compose
+
+Deployment on:
+
+Render
+
+Railway
+
+PythonAnywhere
+
+✔ Documentation
+
+Provide:
+
+Full folder structure
+
+Requirements.txt
+
+Installation guide
+
+Step-by-step backend explanation
+
+Step-by-step frontend explanation
+
+✔ What the final answer MUST include:
+Deliver the following:
+1. Full project folder tree
+/grocery_billing_system
+    /backend
+    /frontend
+    /templates
+    /static
+    /database
+    app.py
+    config.py
+    ...
+
+2. Complete backend code
+
+All Python files
+
+Routes
+
+Models
+
+Controllers
+
+Services
+
+PDF generator
+
+Inventory handler
+
+Authentication
+
+3. Complete frontend code
+
+HTML pages
+
+CSS
+
+Billing UI
+
+Dashboard
+
+Invoice print page
+
+4. SQL database schema
+5. Postman API collection (JSON)
+6. Python snippet for testing API
+7. PDF invoice template
+🔥 Your Output Must Be a FULL WORKING PROJECT
+
+No pseudo-code.
+No high-level explanation only.
+Generate full code files ready to run.
+
+⭐ END OF PROMPT
+
+Generate the full project now.
