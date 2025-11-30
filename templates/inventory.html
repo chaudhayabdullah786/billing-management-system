@@ -12,7 +12,7 @@
         <div class="card bg-primary text-white">
             <div class="card-body">
                 <h6 class="opacity-75">Total Stock Value (Selling Price)</h6>
-                <h3>${{ "%.2f"|format(total_stock_value) }}</h3>
+                <h3>Rs. {{ "{:,.2f}".format(total_stock_value) }}</h3>
             </div>
         </div>
     </div>
@@ -20,7 +20,7 @@
         <div class="card bg-success text-white">
             <div class="card-body">
                 <h6 class="opacity-75">Total Stock Value (Cost Price)</h6>
-                <h3>${{ "%.2f"|format(total_cost_value) }}</h3>
+                <h3>Rs. {{ "{:,.2f}".format(total_cost_value) }}</h3>
             </div>
         </div>
     </div>
@@ -60,14 +60,14 @@
                         <td><code>{{ product.barcode }}</code></td>
                         <td>{{ product.name }}</td>
                         <td>{{ product.category.name if product.category else '-' }}</td>
-                        <td class="text-end">${{ "%.2f"|format(product.price) }}</td>
-                        <td class="text-end">${{ "%.2f"|format(product.cost_price) }}</td>
+                        <td class="text-end">Rs. {{ "{:,.2f}".format(product.price) }}</td>
+                        <td class="text-end">Rs. {{ "{:,.2f}".format(product.cost_price) }}</td>
                         <td class="text-center">
                             <span class="badge bg-{{ 'success' if product.quantity > 10 else 'warning' if product.quantity > 0 else 'danger' }} fs-6">
                                 {{ product.quantity }}
                             </span>
                         </td>
-                        <td class="text-end">${{ "%.2f"|format(product.price * product.quantity) }}</td>
+                        <td class="text-end">Rs. {{ "{:,.2f}".format(product.price * product.quantity) }}</td>
                         {% if current_user.is_admin() %}
                         <td class="text-center">
                             <form method="POST" action="{{ url_for('update_stock', id=product.id) }}" class="d-inline">

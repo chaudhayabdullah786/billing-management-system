@@ -23,7 +23,7 @@
                 <p><strong>Address:</strong> {{ customer.address or '-' }}</p>
                 <hr>
                 <p><strong>Member Since:</strong> {{ customer.created_at.strftime('%B %d, %Y') }}</p>
-                <p><strong>Total Purchases:</strong> ${{ "%.2f"|format(customer.total_purchases) }}</p>
+                <p><strong>Total Purchases:</strong> Rs. {{ "{:,.2f}".format(customer.total_purchases) }}</p>
                 <p><strong>Loyalty Points:</strong> <span class="badge bg-info">{{ customer.loyalty_points }}</span></p>
             </div>
         </div>
@@ -50,7 +50,7 @@
                             <tr>
                                 <td>{{ invoice.invoice_number }}</td>
                                 <td>{{ invoice.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
-                                <td class="text-end">${{ "%.2f"|format(invoice.total_amount) }}</td>
+                                <td class="text-end">Rs. {{ "{:,.2f}".format(invoice.total_amount) }}</td>
                                 <td><span class="badge bg-secondary">{{ invoice.payment_method }}</span></td>
                                 <td class="text-end">
                                     <a href="{{ url_for('view_invoice', id=invoice.id) }}" class="btn btn-sm btn-outline-primary">

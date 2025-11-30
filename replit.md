@@ -71,5 +71,12 @@ PostgreSQL with SQLAlchemy ORM. Tables:
 - **Database**: PostgreSQL
 - **PDF Generation**: ReportLab
 
+## Currency
+- All prices displayed in **Pakistani Rupees (Rs.)**
+- Number formatting with thousands separators (e.g., Rs. 1,234.56)
+- Store address: Karachi, Pakistan
+
 ## Recent Changes
+- Currency updated to Pakistani Rupees (Nov 2025)
+- Imported 10,000 products from CSV (Nov 2025)
 - Initial project setup (Nov 2025)

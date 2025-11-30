@@ -53,7 +53,7 @@ def generate_invoice_pdf(invoice):
     
     elements.append(Paragraph("GROCERY STORE", title_style))
     elements.append(Paragraph("Your Trusted Shopping Partner", subtitle_style))
-    elements.append(Paragraph("123 Main Street, City, Country | Phone: +1 234 567 890", subtitle_style))
+    elements.append(Paragraph("123 Main Street, Karachi, Pakistan | Phone: +92 21 1234567", subtitle_style))
     elements.append(Spacer(1, 5*mm))
     
     elements.append(Paragraph("TAX INVOICE", ParagraphStyle('InvTitle', parent=styles['Heading2'], fontSize=16, alignment=TA_CENTER, textColor=colors.HexColor('#2563eb'))))
@@ -82,8 +82,8 @@ def generate_invoice_pdf(invoice):
             str(idx),
             item.product_name,
             str(item.quantity),
-            f"${float(item.unit_price):.2f}",
-            f"${float(item.total_price):.2f}"
+            f"Rs. {float(item.unit_price):,.2f}",
+            f"Rs. {float(item.total_price):,.2f}"
         ])
     
     items_table = Table(items_data, colWidths=[10*mm, 85*mm, 20*mm, 30*mm, 30*mm])
@@ -104,14 +104,14 @@ def generate_invoice_pdf(invoice):
     elements.append(Spacer(1, 5*mm))
     
     totals_data = [
-        ['', '', '', 'Subtotal:', f"${float(invoice.subtotal):.2f}"],
-        ['', '', '', f'Tax ({float(invoice.tax_rate)}%):', f"${float(invoice.tax_amount):.2f}"],
+        ['', '', '', 'Subtotal:', f"Rs. {float(invoice.subtotal):,.2f}"],
+        ['', '', '', f'Tax ({float(invoice.tax_rate)}%):', f"Rs. {float(invoice.tax_amount):,.2f}"],
     ]
     
     if invoice.discount_amount > 0:
-        totals_data.append(['', '', '', f'Discount ({float(invoice.discount_percent)}%):', f"-${float(invoice.discount_amount):.2f}"])
+        totals_data.append(['', '', '', f'Discount ({float(invoice.discount_percent)}%):', f"-Rs. {float(invoice.discount_amount):,.2f}"])
     
-    totals_data.append(['', '', '', 'TOTAL:', f"${float(invoice.total_amount):.2f}"])
+    totals_data.append(['', '', '', 'TOTAL:', f"Rs. {float(invoice.total_amount):,.2f}"])
     
     totals_table = Table(totals_data, colWidths=[10*mm, 85*mm, 20*mm, 30*mm, 30*mm])
     totals_table.setStyle(TableStyle([

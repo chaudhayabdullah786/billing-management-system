@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function formatCurrency(amount) {
-    return '$' + parseFloat(amount).toFixed(2);
+    return 'Rs. ' + parseFloat(amount).toLocaleString('en-PK', {minimumFractionDigits: 2, maximumFractionDigits: 2});
 }
 
 function showToast(message, type = 'success') {

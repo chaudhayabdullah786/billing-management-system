@@ -64,7 +64,7 @@
                         <td><code>{{ product.barcode }}</code></td>
                         <td>{{ product.name }}</td>
                         <td>{{ product.category.name if product.category else '-' }}</td>
-                        <td class="text-end">${{ "%.2f"|format(product.price) }}</td>
+                        <td class="text-end">Rs. {{ "{:,.2f}".format(product.price) }}</td>
                         <td class="text-end">
                             <span class="badge bg-{{ 'success' if product.quantity > 10 else 'warning' if product.quantity > 0 else 'danger' }}">
                                 {{ product.quantity }}

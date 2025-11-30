@@ -61,10 +61,10 @@
                         <td><code>{{ invoice.invoice_number }}</code></td>
                         <td>{{ invoice.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
                         <td>{{ invoice.customer.name if invoice.customer else 'Walk-in' }}</td>
-                        <td class="text-end">${{ "%.2f"|format(invoice.subtotal) }}</td>
-                        <td class="text-end">${{ "%.2f"|format(invoice.tax_amount) }}</td>
-                        <td class="text-end">${{ "%.2f"|format(invoice.discount_amount) }}</td>
-                        <td class="text-end fw-bold">${{ "%.2f"|format(invoice.total_amount) }}</td>
+                        <td class="text-end">Rs. {{ "{:,.2f}".format(invoice.subtotal) }}</td>
+                        <td class="text-end">Rs. {{ "{:,.2f}".format(invoice.tax_amount) }}</td>
+                        <td class="text-end">Rs. {{ "{:,.2f}".format(invoice.discount_amount) }}</td>
+                        <td class="text-end fw-bold">Rs. {{ "{:,.2f}".format(invoice.total_amount) }}</td>
                         <td><span class="badge bg-secondary">{{ invoice.payment_method }}</span></td>
                         <td class="text-end">
                             <a href="{{ url_for('view_invoice', id=invoice.id) }}" class="btn btn-sm btn-outline-primary">

@@ -46,7 +46,7 @@
                         <td>{{ customer.name }}</td>
                         <td>{{ customer.mobile }}</td>
                         <td>{{ customer.email or '-' }}</td>
-                        <td class="text-end">${{ "%.2f"|format(customer.total_purchases) }}</td>
+                        <td class="text-end">Rs. {{ "{:,.2f}".format(customer.total_purchases) }}</td>
                         <td class="text-center">
                             <span class="badge bg-info">{{ customer.loyalty_points }}</span>
                         </td>

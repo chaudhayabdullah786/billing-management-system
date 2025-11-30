@@ -24,8 +24,8 @@
             <div class="col-md-6">
                 <h3 class="text-primary mb-3"><i class="bi bi-shop"></i> Grocery Store</h3>
                 <p class="mb-1">123 Main Street</p>
-                <p class="mb-1">City, Country</p>
-                <p class="mb-0">Phone: +1 234 567 890</p>
+                <p class="mb-1">Karachi, Pakistan</p>
+                <p class="mb-0">Phone: +92 21 1234567</p>
             </div>
             <div class="col-md-6 text-md-end">
                 <h4 class="text-uppercase text-muted">Tax Invoice</h4>
@@ -71,29 +71,29 @@
                         <td>{{ loop.index }}</td>
                         <td>{{ item.product_name }}</td>
                         <td class="text-center">{{ item.quantity }}</td>
-                        <td class="text-end">${{ "%.2f"|format(item.unit_price) }}</td>
-                        <td class="text-end">${{ "%.2f"|format(item.total_price) }}</td>
+                        <td class="text-end">Rs. {{ "{:,.2f}".format(item.unit_price) }}</td>
+                        <td class="text-end">Rs. {{ "{:,.2f}".format(item.total_price) }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
                 <tfoot>
                     <tr>
                         <td colspan="4" class="text-end"><strong>Subtotal:</strong></td>
-                        <td class="text-end">${{ "%.2f"|format(invoice.subtotal) }}</td>
+                        <td class="text-end">Rs. {{ "{:,.2f}".format(invoice.subtotal) }}</td>
                     </tr>
                     <tr>
                         <td colspan="4" class="text-end"><strong>Tax ({{ "%.0f"|format(invoice.tax_rate) }}%):</strong></td>
-                        <td class="text-end">${{ "%.2f"|format(invoice.tax_amount) }}</td>
+                        <td class="text-end">Rs. {{ "{:,.2f}".format(invoice.tax_amount) }}</td>
                     </tr>
                     {% if invoice.discount_amount > 0 %}
                     <tr>
                         <td colspan="4" class="text-end"><strong>Discount ({{ "%.0f"|format(invoice.discount_percent) }}%):</strong></td>
-                        <td class="text-end text-danger">-${{ "%.2f"|format(invoice.discount_amount) }}</td>
+                        <td class="text-end text-danger">-Rs. {{ "{:,.2f}".format(invoice.discount_amount) }}</td>
                     </tr>
                     {% endif %}
                     <tr class="table-primary">
                         <td colspan="4" class="text-end"><strong class="fs-5">Total:</strong></td>
-                        <td class="text-end"><strong class="fs-5">${{ "%.2f"|format(invoice.total_amount) }}</strong></td>
+                        <td class="text-end"><strong class="fs-5">Rs. {{ "{:,.2f}".format(invoice.total_amount) }}</strong></td>
                     </tr>
                 </tfoot>
             </table>

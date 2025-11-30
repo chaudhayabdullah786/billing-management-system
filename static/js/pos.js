@@ -135,7 +135,7 @@ function renderCart() {
             <div class="cart-item">
                 <div class="cart-item-info">
                     <div class="cart-item-name">${item.name}</div>
-                    <div class="cart-item-price">$${item.price.toFixed(2)} each</div>
+                    <div class="cart-item-price">Rs. ${item.price.toLocaleString('en-PK', {minimumFractionDigits: 2})} each</div>
                 </div>
                 <div class="cart-item-qty">
                     <button class="btn btn-sm btn-outline-secondary" onclick="updateQuantity(${item.product_id}, -1)">
@@ -146,7 +146,7 @@ function renderCart() {
                         <i class="bi bi-plus"></i>
                     </button>
                 </div>
-                <div class="cart-item-total">$${(item.price * item.quantity).toFixed(2)}</div>
+                <div class="cart-item-total">Rs. ${(item.price * item.quantity).toLocaleString('en-PK', {minimumFractionDigits: 2})}</div>
                 <button class="btn btn-sm btn-outline-danger cart-item-remove" onclick="removeFromCart(${item.product_id})">
                     <i class="bi bi-x"></i>
                 </button>
@@ -164,10 +164,10 @@ function updateTotals() {
     const discountAmount = subtotal * (discountPercent / 100);
     const total = subtotal + taxAmount - discountAmount;
     
-    document.getElementById('subtotal').textContent = '$' + subtotal.toFixed(2);
-    document.getElementById('taxAmount').textContent = '$' + taxAmount.toFixed(2);
-    document.getElementById('discountAmount').textContent = '-$' + discountAmount.toFixed(2);
-    document.getElementById('totalAmount').textContent = '$' + total.toFixed(2);
+    document.getElementById('subtotal').textContent = 'Rs. ' + subtotal.toLocaleString('en-PK', {minimumFractionDigits: 2});
+    document.getElementById('taxAmount').textContent = 'Rs. ' + taxAmount.toLocaleString('en-PK', {minimumFractionDigits: 2});
+    document.getElementById('discountAmount').textContent = '-Rs. ' + discountAmount.toLocaleString('en-PK', {minimumFractionDigits: 2});
+    document.getElementById('totalAmount').textContent = 'Rs. ' + total.toLocaleString('en-PK', {minimumFractionDigits: 2});
 }
 
 function clearCart() {
@@ -250,8 +250,8 @@ function showInvoiceModal(invoice) {
                 <td>${index + 1}</td>
                 <td>${item.product_name}</td>
                 <td class="text-center">${item.quantity}</td>
-                <td class="text-end">$${item.unit_price.toFixed(2)}</td>
-                <td class="text-end">$${item.total_price.toFixed(2)}</td>
+                <td class="text-end">Rs. ${item.unit_price.toLocaleString('en-PK', {minimumFractionDigits: 2})}</td>
+                <td class="text-end">Rs. ${item.total_price.toLocaleString('en-PK', {minimumFractionDigits: 2})}</td>
             </tr>
         `;
     });
@@ -291,21 +291,21 @@ function showInvoiceModal(invoice) {
             <tfoot>
                 <tr>
                     <td colspan="4" class="text-end"><strong>Subtotal:</strong></td>
-                    <td class="text-end">$${invoice.subtotal.toFixed(2)}</td>
+                    <td class="text-end">Rs. ${invoice.subtotal.toLocaleString('en-PK', {minimumFractionDigits: 2})}</td>
                 </tr>
                 <tr>
                     <td colspan="4" class="text-end"><strong>Tax (${invoice.tax_rate}%):</strong></td>
-                    <td class="text-end">$${invoice.tax_amount.toFixed(2)}</td>
+                    <td class="text-end">Rs. ${invoice.tax_amount.toLocaleString('en-PK', {minimumFractionDigits: 2})}</td>
                 </tr>
                 ${invoice.discount_amount > 0 ? `
                 <tr>
                     <td colspan="4" class="text-end"><strong>Discount (${invoice.discount_percent}%):</strong></td>
-                    <td class="text-end text-danger">-$${invoice.discount_amount.toFixed(2)}</td>
+                    <td class="text-end text-danger">-Rs. ${invoice.discount_amount.toLocaleString('en-PK', {minimumFractionDigits: 2})}</td>
                 </tr>
                 ` : ''}
                 <tr class="table-primary">
                     <td colspan="4" class="text-end"><strong class="fs-5">Total:</strong></td>
-                    <td class="text-end"><strong class="fs-5">$${invoice.total_amount.toFixed(2)}</strong></td>
+                    <td class="text-end"><strong class="fs-5">Rs. ${invoice.total_amount.toLocaleString('en-PK', {minimumFractionDigits: 2})}</strong></td>
                 </tr>
             </tfoot>
         </table>
