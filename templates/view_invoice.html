@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block title %}Invoice {{ invoice.invoice_number }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-receipt"></i> Invoice Details</h2>
+    <div>
+        <a href="{{ url_for('download_invoice_pdf', id=invoice.id) }}" class="btn btn-primary">
+            <i class="bi bi-file-pdf"></i> Download PDF
+        </a>
+        <button onclick="window.print()" class="btn btn-outline-primary">
+            <i class="bi bi-printer"></i> Print
+        </button>
+        <a href="{{ url_for('invoices') }}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back
+        </a>
+    </div>
+</div>
+
+<div class="card invoice-print">
+    <div class="card-body p-4">
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <h3 class="text-primary mb-3"><i class="bi bi-shop"></i> Grocery Store</h3>
+                <p class="mb-1">123 Main Street</p>
+                <p class="mb-1">City, Country</p>
+                <p class="mb-0">Phone: +1 234 567 890</p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <h4 class="text-uppercase text-muted">Tax Invoice</h4>
+                <h5 class="text-primary">{{ invoice.invoice_number }}</h5>
+                <p class="mb-0">Date: {{ invoice.created_at.strftime('%B %d, %Y %H:%M') }}</p>
+            </div>
+        </div>
+        
+        <hr>
+        
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <h6>Bill To:</h6>
+                <p class="mb-1"><strong>{{ invoice.customer.name if invoice.customer else 'Walk-in Customer' }}</strong></p>
+                {% if invoice.customer %}
+                <p class="mb-1">Mobile: {{ invoice.customer.mobile }}</p>
+                {% if invoice.customer.email %}
+                <p class="mb-0">Email: {{ invoice.customer.email }}</p>
+                {% endif %}
+                {% endif %}
+            </div>
+            <div class="col-md-6 text-md-end">
+                <p class="mb-1">Cashier: {{ invoice.created_by_user.username if invoice.created_by_user else '-' }}</p>
+                <p class="mb-1">Payment: <span class="badge bg-secondary">{{ invoice.payment_method|upper }}</span></p>
+                <p class="mb-0">Status: <span class="badge bg-success">{{ invoice.payment_status|upper }}</span></p>
+            </div>
+        </div>
+        
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Product</th>
+                        <th class="text-center">Qty</th>
+                        <th class="text-end">Unit Price</th>
+                        <th class="text-end">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in invoice.items %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ item.product_name }}</td>
+                        <td class="text-center">{{ item.quantity }}</td>
+                        <td class="text-end">${{ "%.2f"|format(item.unit_price) }}</td>
+                        <td class="text-end">${{ "%.2f"|format(item.total_price) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4" class="text-end"><strong>Subtotal:</strong></td>
+                        <td class="text-end">${{ "%.2f"|format(invoice.subtotal) }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" class="text-end"><strong>Tax ({{ "%.0f"|format(invoice.tax_rate) }}%):</strong></td>
+                        <td class="text-end">${{ "%.2f"|format(invoice.tax_amount) }}</td>
+                    </tr>
+                    {% if invoice.discount_amount > 0 %}
+                    <tr>
+                        <td colspan="4" class="text-end"><strong>Discount ({{ "%.0f"|format(invoice.discount_percent) }}%):</strong></td>
+                        <td class="text-end text-danger">-${{ "%.2f"|format(invoice.discount_amount) }}</td>
+                    </tr>
+                    {% endif %}
+                    <tr class="table-primary">
+                        <td colspan="4" class="text-end"><strong class="fs-5">Total:</strong></td>
+                        <td class="text-end"><strong class="fs-5">${{ "%.2f"|format(invoice.total_amount) }}</strong></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        
+        {% if invoice.notes %}
+        <div class="mt-4">
+            <h6>Notes:</h6>
+            <p class="text-muted">{{ invoice.notes }}</p>
+        </div>
+        {% endif %}
+        
+        <div class="text-center mt-4 pt-4 border-top">
+            <p class="mb-1">Thank you for shopping with us!</p>
+            <p class="text-muted small">Please retain this invoice for your records.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+@media print {
+    .sidebar, .navbar, .btn, .no-print { display: none !important; }
+    .content { margin: 0 !important; padding: 0 !important; }
+    .invoice-print { box-shadow: none !important; border: none !important; }
+}
+</style>
+{% endblock %}

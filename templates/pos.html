@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block title %}POS - Point of Sale{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-search"></i> Search Products</h5>
+            </div>
+            <div class="card-body">
+                <div class="input-group mb-3">
+                    <span class="input-group-text"><i class="bi bi-upc-scan"></i></span>
+                    <input type="text" class="form-control form-control-lg" id="productSearch" 
+                           placeholder="Scan barcode or search product name..." autofocus>
+                </div>
+                
+                <div class="mb-3">
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-outline-secondary category-filter active" data-category="all">All</button>
+                        {% for category in categories %}
+                        <button type="button" class="btn btn-outline-secondary category-filter" data-category="{{ category.id }}">{{ category.name }}</button>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <div id="searchResults" class="row g-2" style="max-height: 400px; overflow-y: auto;">
+                    {% for product in products %}
+                    <div class="col-md-6 col-lg-4 product-item" data-category="{{ product.category_id or 'none' }}">
+                        <div class="card product-card h-100" data-product='{{ product.to_dict()|tojson }}'>
+                            <div class="card-body p-2">
+                                <h6 class="card-title mb-1 text-truncate">{{ product.name }}</h6>
+                                <p class="card-text mb-1">
+                                    <small class="text-muted">{{ product.barcode }}</small>
+                                </p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fw-bold text-primary">${{ "%.2f"|format(product.price) }}</span>
+                                    <span class="badge bg-{{ 'success' if product.quantity > 10 else 'warning' if product.quantity > 0 else 'danger' }}">
+                                        {{ product.quantity }} in stock
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-5">
+        <div class="card pos-cart">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-cart3"></i> Cart</h5>
+                <button type="button" class="btn btn-sm btn-outline-danger" id="clearCart">
+                    <i class="bi bi-trash"></i> Clear
+                </button>
+            </div>
+            <div class="card-body p-0">
+                <div id="cartItems" class="cart-items">
+                    <div class="text-center text-muted py-5" id="emptyCart">
+                        <i class="bi bi-cart-x display-4"></i>
+                        <p class="mt-2">Cart is empty</p>
+                        <small>Click on products to add them</small>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="mb-3">
+                    <label class="form-label">Customer</label>
+                    <select class="form-select" id="customerSelect">
+                        <option value="">Walk-in Customer</option>
+                        {% for customer in customers %}
+                        <option value="{{ customer.id }}">{{ customer.name }} ({{ customer.mobile }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="row g-2 mb-3">
+                    <div class="col-6">
+                        <label class="form-label">Discount %</label>
+                        <input type="number" class="form-control" id="discountPercent" value="0" min="0" max="100">
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label">Payment</label>
+                        <select class="form-select" id="paymentMethod">
+                            <option value="cash">Cash</option>
+                            <option value="card">Card</option>
+                            <option value="upi">UPI</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="cart-totals mb-3">
+                    <div class="d-flex justify-content-between">
+                        <span>Subtotal:</span>
+                        <span id="subtotal">$0.00</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span>Tax (18%):</span>
+                        <span id="taxAmount">$0.00</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span>Discount:</span>
+                        <span id="discountAmount">-$0.00</span>
+                    </div>
+                    <hr class="my-2">
+                    <div class="d-flex justify-content-between fs-5 fw-bold">
+                        <span>Total:</span>
+                        <span id="totalAmount" class="text-primary">$0.00</span>
+                    </div>
+                </div>
+                
+                <button type="button" class="btn btn-primary btn-lg w-100" id="checkoutBtn" disabled>
+                    <i class="bi bi-check-circle"></i> Complete Sale
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="invoiceModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title"><i class="bi bi-check-circle"></i> Sale Completed!</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="invoiceContent">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a href="#" class="btn btn-primary" id="downloadPdfBtn" target="_blank">
+                    <i class="bi bi-file-pdf"></i> Download PDF
+                </a>
+                <button type="button" class="btn btn-success" id="printInvoiceBtn">
+                    <i class="bi bi-printer"></i> Print
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/pos.js') }}"></script>
+{% endblock %}

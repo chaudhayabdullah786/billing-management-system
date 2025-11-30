@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}Invoices{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-receipt"></i> Invoices</h2>
+    <a href="{{ url_for('pos') }}" class="btn btn-primary">
+        <i class="bi bi-plus-lg"></i> New Invoice
+    </a>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="GET" class="row g-3">
+            <div class="col-md-4">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                    <input type="text" class="form-control" name="search" value="{{ search }}" placeholder="Search invoice # or customer...">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="input-group">
+                    <span class="input-group-text">From</span>
+                    <input type="date" class="form-control" name="date_from" value="{{ date_from }}">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="input-group">
+                    <span class="input-group-text">To</span>
+                    <input type="date" class="form-control" name="date_to" value="{{ date_to }}">
+                </div>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Filter</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Invoice #</th>
+                        <th>Date</th>
+                        <th>Customer</th>
+                        <th class="text-end">Subtotal</th>
+                        <th class="text-end">Tax</th>
+                        <th class="text-end">Discount</th>
+                        <th class="text-end">Total</th>
+                        <th>Payment</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for invoice in invoices.items %}
+                    <tr>
+                        <td><code>{{ invoice.invoice_number }}</code></td>
+                        <td>{{ invoice.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td>{{ invoice.customer.name if invoice.customer else 'Walk-in' }}</td>
+                        <td class="text-end">${{ "%.2f"|format(invoice.subtotal) }}</td>
+                        <td class="text-end">${{ "%.2f"|format(invoice.tax_amount) }}</td>
+                        <td class="text-end">${{ "%.2f"|format(invoice.discount_amount) }}</td>
+                        <td class="text-end fw-bold">${{ "%.2f"|format(invoice.total_amount) }}</td>
+                        <td><span class="badge bg-secondary">{{ invoice.payment_method }}</span></td>
+                        <td class="text-end">
+                            <a href="{{ url_for('view_invoice', id=invoice.id) }}" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a href="{{ url_for('download_invoice_pdf', id=invoice.id) }}" class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-file-pdf"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="9" class="text-center py-4 text-muted">No invoices found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% if invoices.pages > 1 %}
+    <div class="card-footer">
+        <nav>
+            <ul class="pagination mb-0 justify-content-center">
+                {% if invoices.has_prev %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('invoices', page=invoices.prev_num, search=search, date_from=date_from, date_to=date_to) }}">&laquo; Previous</a>
+                </li>
+                {% endif %}
+                {% for page in invoices.iter_pages() %}
+                    {% if page %}
+                    <li class="page-item {% if page == invoices.page %}active{% endif %}">
+                        <a class="page-link" href="{{ url_for('invoices', page=page, search=search, date_from=date_from, date_to=date_to) }}">{{ page }}</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                    {% endif %}
+                {% endfor %}
+                {% if invoices.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('invoices', page=invoices.next_num, search=search, date_from=date_from, date_to=date_to) }}">Next &raquo;</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

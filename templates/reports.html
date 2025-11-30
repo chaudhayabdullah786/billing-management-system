@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+
+{% block title %}Reports{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-bar-chart"></i> Reports & Analytics</h2>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-lg-8">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-graph-up"></i> Monthly Sales Trend</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="monthlySalesChart" height="300"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-pie-chart"></i> Stock Status</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="stockStatusChart" height="300"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-calendar3"></i> Daily Sales (Last 7 Days)</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="dailySalesChart" height="250"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-trophy"></i> Top Selling Products</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="topProductsChart" height="250"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="bi bi-download"></i> Export Reports</h5>
+    </div>
+    <div class="card-body">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label">Report Type</label>
+                <select class="form-select" id="reportType">
+                    <option value="sales">Sales Report</option>
+                    <option value="inventory">Inventory Report</option>
+                    <option value="customers">Customers Report</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">From Date</label>
+                <input type="date" class="form-control" id="dateFrom">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">To Date</label>
+                <input type="date" class="form-control" id="dateTo">
+            </div>
+            <div class="col-md-3">
+                <button type="button" class="btn btn-primary w-100" id="exportBtn">
+                    <i class="bi bi-download"></i> Export CSV
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('/api/dashboard/stats')
+        .then(response => response.json())
+        .then(data => {
+            new Chart(document.getElementById('monthlySalesChart').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: data.monthly_sales.map(d => d.month),
+                    datasets: [{
+                        label: 'Monthly Sales ($)',
+                        data: data.monthly_sales.map(d => d.sales),
+                        backgroundColor: 'rgba(37, 99, 235, 0.8)',
+                        borderColor: '#2563eb',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+            
+            new Chart(document.getElementById('stockStatusChart').getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Out of Stock', 'Low Stock', 'In Stock'],
+                    datasets: [{
+                        data: [data.out_of_stock, data.low_stock, Math.max(0, 100 - data.out_of_stock - data.low_stock)],
+                        backgroundColor: ['#ef4444', '#f59e0b', '#10b981']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+            
+            new Chart(document.getElementById('dailySalesChart').getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: data.daily_sales.map(d => d.day),
+                    datasets: [{
+                        label: 'Daily Sales ($)',
+                        data: data.daily_sales.map(d => d.sales),
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+            
+            if (data.top_products.length > 0) {
+                new Chart(document.getElementById('topProductsChart').getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: data.top_products.map(p => p.name),
+                        datasets: [{
+                            label: 'Units Sold',
+                            data: data.top_products.map(p => p.quantity),
+                            backgroundColor: ['#2563eb', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'y',
+                        scales: { x: { beginAtZero: true } }
+                    }
+                });
+            }
+        });
+    
+    document.getElementById('exportBtn').addEventListener('click', function() {
+        const type = document.getElementById('reportType').value;
+        const dateFrom = document.getElementById('dateFrom').value;
+        const dateTo = document.getElementById('dateTo').value;
+        
+        let url = `/api/reports/export?type=${type}`;
+        if (dateFrom) url += `&date_from=${dateFrom}`;
+        if (dateTo) url += `&date_to=${dateTo}`;
+        
+        window.location.href = url;
+    });
+});
+</script>
+{% endblock %}

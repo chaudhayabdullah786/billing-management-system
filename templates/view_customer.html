@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Customer: {{ customer.name }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-person"></i> {{ customer.name }}</h2>
+    <a href="{{ url_for('customers') }}" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Back to Customers
+    </a>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Customer Information</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Name:</strong> {{ customer.name }}</p>
+                <p><strong>Mobile:</strong> {{ customer.mobile }}</p>
+                <p><strong>Email:</strong> {{ customer.email or '-' }}</p>
+                <p><strong>Address:</strong> {{ customer.address or '-' }}</p>
+                <hr>
+                <p><strong>Member Since:</strong> {{ customer.created_at.strftime('%B %d, %Y') }}</p>
+                <p><strong>Total Purchases:</strong> ${{ "%.2f"|format(customer.total_purchases) }}</p>
+                <p><strong>Loyalty Points:</strong> <span class="badge bg-info">{{ customer.loyalty_points }}</span></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Purchase History</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Invoice #</th>
+                                <th>Date</th>
+                                <th class="text-end">Amount</th>
+                                <th>Payment</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for invoice in invoices %}
+                            <tr>
+                                <td>{{ invoice.invoice_number }}</td>
+                                <td>{{ invoice.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                                <td class="text-end">${{ "%.2f"|format(invoice.total_amount) }}</td>
+                                <td><span class="badge bg-secondary">{{ invoice.payment_method }}</span></td>
+                                <td class="text-end">
+                                    <a href="{{ url_for('view_invoice', id=invoice.id) }}" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a href="{{ url_for('download_invoice_pdf', id=invoice.id) }}" class="btn btn-sm btn-outline-secondary">
+                                        <i class="bi bi-file-pdf"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center py-4 text-muted">No purchase history</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

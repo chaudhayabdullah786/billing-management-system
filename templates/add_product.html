@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Add Product{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-plus-circle"></i> Add Product</h2>
+    <a href="{{ url_for('products') }}" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Back to Products
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <form method="POST">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">Product Name *</label>
+                    <input type="text" class="form-control" name="name" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Barcode</label>
+                    <input type="text" class="form-control" name="barcode" placeholder="Leave empty to auto-generate">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Category</label>
+                    <select class="form-select" name="category_id">
+                        <option value="">Select Category</option>
+                        {% for category in categories %}
+                        <option value="{{ category.id }}">{{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Selling Price *</label>
+                    <div class="input-group">
+                        <span class="input-group-text">$</span>
+                        <input type="number" class="form-control" name="price" step="0.01" min="0" required>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Cost Price</label>
+                    <div class="input-group">
+                        <span class="input-group-text">$</span>
+                        <input type="number" class="form-control" name="cost_price" step="0.01" min="0" value="0">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Quantity in Stock</label>
+                    <input type="number" class="form-control" name="quantity" min="0" value="0">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Unit</label>
+                    <select class="form-select" name="unit">
+                        <option value="piece">Piece</option>
+                        <option value="kg">Kilogram (kg)</option>
+                        <option value="g">Gram (g)</option>
+                        <option value="l">Liter (L)</option>
+                        <option value="ml">Milliliter (ml)</option>
+                        <option value="box">Box</option>
+                        <option value="pack">Pack</option>
+                    </select>
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-control" name="description" rows="3"></textarea>
+                </div>
+                <div class="col-12">
+                    <hr>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-lg"></i> Add Product
+                    </button>
+                    <a href="{{ url_for('products') }}" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Product{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-pencil"></i> Edit Product</h2>
+    <a href="{{ url_for('products') }}" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Back to Products
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <form method="POST">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">Product Name *</label>
+                    <input type="text" class="form-control" name="name" value="{{ product.name }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Barcode</label>
+                    <input type="text" class="form-control" value="{{ product.barcode }}" readonly>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Category</label>
+                    <select class="form-select" name="category_id">
+                        <option value="">Select Category</option>
+                        {% for category in categories %}
+                        <option value="{{ category.id }}" {% if product.category_id == category.id %}selected{% endif %}>{{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Selling Price *</label>
+                    <div class="input-group">
+                        <span class="input-group-text">$</span>
+                        <input type="number" class="form-control" name="price" step="0.01" min="0" value="{{ product.price }}" required>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Cost Price</label>
+                    <div class="input-group">
+                        <span class="input-group-text">$</span>
+                        <input type="number" class="form-control" name="cost_price" step="0.01" min="0" value="{{ product.cost_price }}">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Quantity in Stock</label>
+                    <input type="number" class="form-control" name="quantity" min="0" value="{{ product.quantity }}">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Unit</label>
+                    <select class="form-select" name="unit">
+                        <option value="piece" {% if product.unit == 'piece' %}selected{% endif %}>Piece</option>
+                        <option value="kg" {% if product.unit == 'kg' %}selected{% endif %}>Kilogram (kg)</option>
+                        <option value="g" {% if product.unit == 'g' %}selected{% endif %}>Gram (g)</option>
+                        <option value="l" {% if product.unit == 'l' %}selected{% endif %}>Liter (L)</option>
+                        <option value="ml" {% if product.unit == 'ml' %}selected{% endif %}>Milliliter (ml)</option>
+                        <option value="box" {% if product.unit == 'box' %}selected{% endif %}>Box</option>
+                        <option value="pack" {% if product.unit == 'pack' %}selected{% endif %}>Pack</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Status</label>
+                    <div class="form-check form-switch mt-2">
+                        <input class="form-check-input" type="checkbox" name="is_active" id="isActive" {% if product.is_active %}checked{% endif %}>
+                        <label class="form-check-label" for="isActive">Active</label>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-control" name="description" rows="3">{{ product.description or '' }}</textarea>
+                </div>
+                <div class="col-12">
+                    <hr>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-lg"></i> Save Changes
+                    </button>
+                    <a href="{{ url_for('products') }}" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
