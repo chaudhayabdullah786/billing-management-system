@@ -24,7 +24,7 @@ login_manager.login_message_category = 'info'
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    return db.session.get(User, int(user_id))
 
 def admin_required(f):
     @wraps(f)
@@ -39,12 +39,18 @@ def init_db():
     with app.app_context():
         db.create_all()
         if not User.query.filter_by(username='admin').first():
+            admin_password = os.environ.get('ADMIN_PASSWORD', 'admin123')
+            cashier_password = os.environ.get('CASHIER_PASSWORD', 'cashier123')
+            
+            if admin_password == 'admin123':
+                print("WARNING: Using default admin password. Set ADMIN_PASSWORD env var for production!")
+            
             admin = User(
                 username='admin',
                 email='admin@grocery.com',
                 role='admin'
             )
-            admin.set_password('admin123')
+            admin.set_password(admin_password)
             db.session.add(admin)
             
             cashier = User(
@@ -52,7 +58,7 @@ def init_db():
                 email='cashier@grocery.com',
                 role='cashier'
             )
-            cashier.set_password('cashier123')
+            cashier.set_password(cashier_password)
             db.session.add(cashier)
             
             categories = [

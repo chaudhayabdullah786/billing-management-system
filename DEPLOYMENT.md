@@ -116,12 +116,25 @@ docker-compose up -d
 5. Set up PostgreSQL (requires paid plan) or use SQLite
 6. Reload web app
 
+## Security: Default Credentials
+
+The application creates default demo accounts on first run:
+- Admin: `admin` / `admin123`
+- Cashier: `cashier` / `cashier123`
+
+**For production deployment, you MUST set these environment variables:**
+```bash
+export ADMIN_PASSWORD="your-secure-admin-password"
+export CASHIER_PASSWORD="your-secure-cashier-password"
+```
+
 ## Production Checklist
 
+- [ ] **CRITICAL: Set ADMIN_PASSWORD and CASHIER_PASSWORD environment variables**
 - [ ] Set `DEBUG=False` in production
 - [ ] Use strong `SESSION_SECRET`
 - [ ] Configure HTTPS
 - [ ] Set up database backups
 - [ ] Configure logging
 - [ ] Set up monitoring
-- [ ] Change default admin password
+- [ ] Delete or deactivate demo accounts after creating real admin accounts
